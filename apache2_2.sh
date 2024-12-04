@@ -59,8 +59,8 @@ elif [ $SSL == "n" ]; then
     echo "    ServerName $DOMAIN" | tee -a $DOMAIN.conf
     echo "    ServerAlias www.$DOMAIN" | tee -a $DOMAIN.conf
     echo "    DocumentRoot /var/www/$DOMAIN" | tee -a $DOMAIN.conf
-    echo "    ErrorLog ${APACHE_LOG_DIR}/error.log" | tee -a $DOMAIN.conf
-    echo "    CustomLog ${APACHE_LOG_DIR}/access.log combined" | tee -a $DOMAIN.conf
+    echo "    ErrorLog $APACHE/error.log" | tee -a $DOMAIN.conf
+    echo "    CustomLog $APACHE/access.log combined" | tee -a $DOMAIN.conf
     echo "</VirtualHost>" | tee -a $DOMAIN.conf
 fi
 echo "O diretório /var/www/$DOMAIN/ foi criado"
