@@ -1,6 +1,7 @@
 #!/bin/bash
 COUNTER=0
 APACHE="${APACHE_LOG_DIR}"
+
 echo "Vamos Instalar o Apache2"
 echo "Coloque o nome do seu dominio - (Sem acentos por favor)"
 read DOMAIN
@@ -24,7 +25,7 @@ done
 
 apt update > /dev/null
 apt install apache2 -y
-apt install open-ssl -y > /dev/null
+apt install openssl -y > /dev/null
 systemctl restart apache2
 mkdir -p /var/www/$DOMAIN
 chmod -R 755 /var/www/$DOMAIN
@@ -39,9 +40,9 @@ echo "  <h1> Parabens! Seu dominio $DOMAIN foi criado com sucesso</h1>" | tee -a
 echo "  </body>" | tee -a index.html
 echo "</html>" | tee -a index.html
 clear
-touch /etc/apache2/sites-available/$DOMAIN.conf
 cd /etc/apache2/sites-available
-if [ $SSL == "y"]; then
+touch $DOMAIN.conf
+if [ $SSL == "y" ]; then
     a2enmod ssl
     systemctl restart apache2
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/$DOMAIN-selfsigned.key -out /etc/ssl/certs/$DOMAIN-selfsigned.crt
@@ -59,8 +60,8 @@ elif [ $SSL == "n" ]; then
     echo "    ServerName $DOMAIN" | tee -a $DOMAIN.conf
     echo "    ServerAlias www.$DOMAIN" | tee -a $DOMAIN.conf
     echo "    DocumentRoot /var/www/$DOMAIN" | tee -a $DOMAIN.conf
-    echo "    ErrorLog $APACHE/error.log" | tee -a $DOMAIN.conf
-    echo "    CustomLog $APACHE/access.log combined" | tee -a $DOMAIN.conf
+    echo "    ErrorLog ${APACHE_LOG_DIR}/error.log" | tee -a $DOMAIN.conf
+    echo "    CustomLog ${APACHE_LOG_DIR}/access.log combined" | tee -a $DOMAIN.conf
     echo "</VirtualHost>" | tee -a $DOMAIN.conf
 fi
 echo "O diretório /var/www/$DOMAIN/ foi criado"
